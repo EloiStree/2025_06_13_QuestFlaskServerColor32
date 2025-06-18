@@ -18,6 +18,10 @@ import os
 # Get the absolute path of the current file
 file_path = os.path.abspath(__file__)
 directory_path = os.path.dirname(file_path)
+images_directory = os.path.join(directory_path, 'Images')
+
+if not os.path.exists(images_directory):
+    os.makedirs(images_directory)
 
 
 def try_parse_width_height_color32_to_image(bytes_array_store_color32:str, width,height):
@@ -51,10 +55,10 @@ def save_raw_color32_and_image(file_name_no_extension:str, bytes_width_height_co
     image_as_bytes_array = np.frombuffer(bytes_width_height_color32, dtype=np.uint8)
     pixel_count = image_as_bytes_array.size // 4  
     string_path_of_image = file_name_no_extension + '.color32'
-    path_bytes_32 = os.path.join(directory_path, string_path_of_image)
+    path_bytes_32 = os.path.join(images_directory, string_path_of_image)
     save_bytes_as_raw_color32(path_bytes_32, bytes_width_height_color32)
 
-    path_image = os.path.join(directory_path, file_name_no_extension+ '.png')
+    path_image = os.path.join(images_directory, file_name_no_extension+ '.png')
     image = try_parse_width_height_color32_to_image(bytes_width_height_color32,int_little_endian_width,int_little_endian_height)
     save_image_near_server(path_image, image)
     return jsonify({'message': 'Image saved successfully'})
